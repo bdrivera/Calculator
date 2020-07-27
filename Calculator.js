@@ -1,8 +1,8 @@
 'use strict';
 
 /* Global Variable Block */
-const cont = $('#');
-const butt = $('#');
+//const cont = $('#');
+//const butt = $('#');
 
 /* Runtime Start*/
 
@@ -12,7 +12,7 @@ const butt = $('#');
 /**
  * Establishes basic CSS for Calculator
  */
-function setUpCSS() {
+/*function setUpCSS() {
     //CSS for board
     !.style.display = "flex";
     !.style.flexWrap = "wrap";
@@ -20,7 +20,7 @@ function setUpCSS() {
     !.style.textAlign = "center";
     !.style.width = etchContWidth + "px";
     !.style.height = etchContWidth + "px";
-}
+}*/
 
 /**
  * Function that queries an inquiry and returns the element.
