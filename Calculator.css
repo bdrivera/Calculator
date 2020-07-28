@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Calculator';
+    src: url("src/Calculator.ttf");
+}
+
 body {
     margin: 0 auto;
     text-align: center;
@@ -22,22 +27,24 @@ body {
     background-color: rgb(1, 141, 64);
     border-radius: 8px;
     border-color: rgb(0, 70, 31);
+    font-family: "calculator";
 }
 
 #displayLineOne {
     width: 410px;
-    height: 40px;
-    margin: 5px 10px 10px 10px;
+    height: 45px;
+    margin: -5px 5px 5px 5px;
     text-align: right;
-    font-size: 40px;
+    font-size: 50px;
+    font-family: "Calculator";
 }
 
 #displayLineTwo {
     width: 410px;
-    height: 40px;
-    margin: 0px 10px 5px 10px;
+    height: 45px;
+    margin: 0px 5px 0px 5px;
     text-align: right;
-    font-size: 40px;
+    font-size: 50px;
 }
 
 button {
