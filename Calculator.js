@@ -1,19 +1,18 @@
 'use strict';
 
 /* Global Variable Block */
-const dispOne = $('#displayLineOne');
-const dispTwo = $('#displayLineTwo');
-const butts = $('#buttonContainer');
+const dispOne = $('#displayLineOne'); //accessor for calculator memory line
+const dispTwo = $('#displayLineTwo'); //accessor for calculator active line
+const butts = $('#buttonContainer'); //accesssor for calculator buttons container
 
 /* Global Display Variables */
-var displayMemory = "";
-var displayActive = "";
+var displayMemory = ""; //top line for last number entered and active operator
+var displayActive = ""; //bottom line for number being currently entered
 
 /* Global Equation Variables */
-var eqVarOne = 0;
-var eqOp = "";
-var eqVarTwo = 0;
-var equalsFlag = false;
+var eqVar = undefined; //storage for results
+var eqOp = ""; //storage for active operator
+var clearFlag = false; //will display need to be cleared on next button press?
 
 /* Runtime Start */
 addButtonListeners();
@@ -21,36 +20,94 @@ addButtonListeners();
 
 /**
  * Adds number to display
- * @param {*} aNum Integer to use for equation
+ * @param {*} aNum Float number to use for equation
  */
 function appendNumber(aNum) {
-    displayActive += "" + aNum;
+    if(clearFlag == true) { //clear the display if it needs to be...
+        displayActive = "";
+        clearFlag = false; //reset the flag...
+    }
+    displayActive += "" + aNum; //add number to display
     refreshDisplay();
 }
 
-
+/**
+ * Adds operator to display and moves active number to memory
+ * @param {*} aOp String operator to use for equation
+ */
 function appendOperator(aOp) {
-    eqVarOne = parseFloat(displayActive);
-    eqOp = aOp;
-    displayMemory = eqVarOne + " " + aOp + " ";
-    displayActive = "";
-    refreshDisplay();
+     
+    if(aOp == "=" && //if the user pressed '=' and...
+        (eqOp == "" || displayActive == "")) { //not yet selected an operator or a number...
+        return;
+    }
+
+    
+    if(eqVar == undefined) { //if nothing has been entered yet...
+        eqVar = parseFloat(displayActive); 
+    } else {
+        switch(eqOp) { //find the correct mathmatical function...
+            case "+":
+                eqVar += parseFloat(displayActive);
+            break;
+            case "-":
+                eqVar -= parseFloat(displayActive);
+            break;
+            case "x":
+                eqVar *= parseFloat(displayActive);
+            break;
+            case "/":
+                eqVar /= parseFloat(displayActive);
+            break;
+        }
+    }
+
+    if(aOp != "=") { //if the user went right into another operation...
+        eqOp = aOp;
+        displayMemory = eqVar + " " + aOp + " ";
+        displayActive = "";
+        refreshDisplay();
+    } else { //if the user just pressed enter...
+        eqOp = "";
+        displayMemory += displayActive;
+        displayActive = eqVar;
+        clearFlag = true;
+        refreshDisplay();
+    }
+}
+
+function appendDelete() {
+
+}
+
+function appendPercent() {
+    if(displayActive != "") {
+        displayActive = (parseFloat(displayActive) / 100); //add number to display
+        refreshDisplay();
+    }
+}
+
+function appendDecimal() {
+
+}
+
+function appendFlip() {
+
 }
 
 /**
  * Changes global variables to defaults and calls for refresh of display
  */
-function clearCalculator() {
+function appendClear() {
     displayMemory = "";
     displayActive = "";
-    eqVarOne = 0;
-    eqOp = 0;
-    eqVarTwo = 0;
+    eqVar = undefined;
+    eqOp = "";
     refreshDisplay();
 }
 
 /**
- * Rewrites the display text lines to current global variables state
+ * Rewrites the display text lines to current global variable states
  */
 function refreshDisplay() {
     dispOne.innerText = displayMemory;
@@ -64,7 +121,11 @@ function refreshDisplay() {
 function buttonEvent(aTarget) {
     switch(aTarget.value) {
         case "clear":
-            clearCalculator();
+            appendClear();
+        return;
+
+        case "delete":
+            appendFlip();
         return;
 
         case "0":
@@ -84,9 +145,21 @@ function buttonEvent(aTarget) {
         case "-":
         case "x":
         case "/":
+        case "=":
             appendOperator(aTarget.value);
         return;
 
+        case "%":
+            appendPercent();
+        return;
+
+        case "decimal":
+            appendDecimal();
+        return;
+
+        case "flip":
+            appendFlip();
+        return;
     }
 }
 
@@ -104,7 +177,7 @@ function addButtonListeners() {
 }
 
 /**
- * Function that queries an inquiry and returns the element.
+ * Function that queries and returns the element.
  * @param {*} n Element name  to be queried and returned
  */
 function $(n) { return document.querySelector(n); }
