@@ -41,6 +41,11 @@ function appendOperator(aOp) {
         return;
     }
 
+    if(eqOp != "" && displayActive == "") { //if an operator is already selected...
+        appendDelete(); //remove current operator from memory line
+        eqOp = ""; //remove current operator logically
+    }
+
     
     if(eqVar == undefined) { //if we haven't performed an operation yet...
         eqVar = parseFloat(displayActive); //prepare for second number in equation...
@@ -88,14 +93,28 @@ function appendOperator(aOp) {
  * Deletes last entered character
  */
 function appendDelete() {
+    if(clearFlag == true) { //clear the display if it needs to be...
+        appendClear();
+    }
 
+    if(displayActive != "") { //if the active display is not empty...
+        displayActive = displayActive.slice(0, -1); //remove last entered number
+    } else if(eqOp != "" && displayActive == "") { //if no operator selected and display empty...
+        eqOp = 0; //remove operator logically
+        displayMemory = displayMemory.slice(0, -3); //remove operator from memory
+    } else if(eqOp == "" && displayActive == "" && displayMemory != "") {
+        displayActive = displayMemory.slice(0, -1);
+        displayMemory = "";
+    }
+
+    refreshDisplay();
 }
 
 /**
  * Changes active entry to percentage by multiplication
  */
 function appendPercent() {
-    if(displayActive != "") {
+    if(displayActive != "") { //if the active display isn't emtpy...
         displayActive = (parseFloat(displayActive) / 100); //add number to display
         refreshDisplay();
     }
@@ -105,12 +124,12 @@ function appendPercent() {
  * Inserts a decimal point to active entry
  */
 function appendDecimal() {
-    if(displayActive.includes(".")) {
+    if(displayActive.includes(".")) { //if the active display already has a decimal...
         return;
-    } else if(displayActive == "") {
-        displayActive = "0.";
+    } else if(displayActive == "") { //if the active display is empty...
+        displayActive = "0."; //lead with a 0.
     } else {
-        displayActive += ".";
+        displayActive += "."; //add period to active display
     }
     refreshDisplay();
 }
@@ -119,7 +138,7 @@ function appendDecimal() {
  * Changes active entry to opposite sign eg. positive to negative
  */
 function appendFlip() {
-    if(displayActive != "") {
+    if(displayActive != "") { //if the active display is empty...
         displayActive = (parseFloat(displayActive) * -1); //add number to display
         refreshDisplay();
     }
@@ -133,6 +152,7 @@ function appendClear() {
     displayActive = "";
     eqVar = undefined;
     eqOp = "";
+    clearFlag = false;
     refreshDisplay();
 }
 
@@ -155,7 +175,7 @@ function buttonEvent(aTarget) {
         return;
 
         case "delete":
-            appendFlip();
+            appendDelete();
         return;
 
         case "0":
