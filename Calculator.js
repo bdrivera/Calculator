@@ -24,8 +24,7 @@ addButtonListeners();
  */
 function appendNumber(aNum) {
     if(clearFlag == true) { //clear the display if it needs to be...
-        displayActive = "";
-        clearFlag = false; //reset the flag...
+        appendClear();
     }
     displayActive += "" + aNum; //add number to display
     refreshDisplay();
@@ -35,7 +34,9 @@ function appendNumber(aNum) {
  * Adds operator to display and moves active number to memory
  * @param {*} aOp String operator to use for equation
  */
-function appendOperator(aOp) { 
+function appendOperator(aOp) {
+    clearFlag = false;
+
     if(aOp == "=" && //if the user pressed '=' and...
         (eqOp == "" || displayActive == "")) { //not yet selected an operator or a number...
         return;
@@ -46,6 +47,13 @@ function appendOperator(aOp) {
         eqOp = ""; //remove current operator logically
     }
 
+    if(displayMemory == "") {
+        eqVar = undefined;
+    }
+
+    if(displayActive == "ERROR") {
+        return;
+    }
     
     if(eqVar == undefined) { //if we haven't performed an operation yet...
         eqVar = parseFloat(displayActive); //prepare for second number in equation...
