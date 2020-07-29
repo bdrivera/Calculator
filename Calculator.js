@@ -35,17 +35,16 @@ function appendNumber(aNum) {
  * Adds operator to display and moves active number to memory
  * @param {*} aOp String operator to use for equation
  */
-function appendOperator(aOp) {
-     
+function appendOperator(aOp) { 
     if(aOp == "=" && //if the user pressed '=' and...
         (eqOp == "" || displayActive == "")) { //not yet selected an operator or a number...
         return;
     }
 
     
-    if(eqVar == undefined) { //if nothing has been entered yet...
-        eqVar = parseFloat(displayActive); 
-    } else {
+    if(eqVar == undefined) { //if we haven't performed an operation yet...
+        eqVar = parseFloat(displayActive); //prepare for second number in equation...
+    } else { //if we're ready to do a calculation...
         switch(eqOp) { //find the correct mathmatical function...
             case "+":
                 eqVar += parseFloat(displayActive);
@@ -57,16 +56,25 @@ function appendOperator(aOp) {
                 eqVar *= parseFloat(displayActive);
             break;
             case "/":
+                if(parseFloat(displayActive) == 0) { //if user divides by 0...
+                    aOp = "e";
+                    break;
+                }
                 eqVar /= parseFloat(displayActive);
             break;
         }
     }
 
-    if(aOp != "=") { //if the user went right into another operation...
+    if(aOp == "e") { //if the user made an expected error...
+        appendClear();
+        displayActive = "ERROR";
+        clearFlag = true;
+        refreshDisplay();
+    } else if(aOp != "=") { //if the user went right into another operation...
         eqOp = aOp;
         displayMemory = eqVar + " " + aOp + " ";
         displayActive = "";
-        refreshDisplay();
+        refreshDisplay(); 
     } else { //if the user just pressed enter...
         eqOp = "";
         displayMemory += displayActive;
@@ -76,10 +84,16 @@ function appendOperator(aOp) {
     }
 }
 
+/**
+ * Deletes last entered character
+ */
 function appendDelete() {
 
 }
 
+/**
+ * Changes active entry to percentage by multiplication
+ */
 function appendPercent() {
     if(displayActive != "") {
         displayActive = (parseFloat(displayActive) / 100); //add number to display
@@ -87,12 +101,28 @@ function appendPercent() {
     }
 }
 
+/**
+ * Inserts a decimal point to active entry
+ */
 function appendDecimal() {
-
+    if(displayActive.includes(".")) {
+        return;
+    } else if(displayActive == "") {
+        displayActive = "0.";
+    } else {
+        displayActive += ".";
+    }
+    refreshDisplay();
 }
 
+/**
+ * Changes active entry to opposite sign eg. positive to negative
+ */
 function appendFlip() {
-
+    if(displayActive != "") {
+        displayActive = (parseFloat(displayActive) * -1); //add number to display
+        refreshDisplay();
+    }
 }
 
 /**
