@@ -122,6 +122,10 @@ function appendDelete() {
  * Changes active entry to percentage by multiplication
  */
 function appendPercent() {
+    if(displayActive == "ERROR") {
+        return;
+    }
+    
     if(displayActive != "") { //if the active display isn't emtpy...
         displayActive = (parseFloat(displayActive) / 100); //add number to display
         refreshDisplay();
@@ -132,6 +136,10 @@ function appendPercent() {
  * Inserts a decimal point to active entry
  */
 function appendDecimal() {
+    if(displayActive == "ERROR") {
+        return;
+    }
+
     if(displayActive.includes(".")) { //if the active display already has a decimal...
         return;
     } else if(displayActive == "") { //if the active display is empty...
@@ -146,6 +154,10 @@ function appendDecimal() {
  * Changes active entry to opposite sign eg. positive to negative
  */
 function appendFlip() {
+    if(displayActive == "ERROR") {
+        return;
+    }
+
     if(displayActive != "") { //if the active display is empty...
         displayActive = (parseFloat(displayActive) * -1); //add number to display
         refreshDisplay();
